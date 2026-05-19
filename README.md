@@ -27,7 +27,7 @@ Example:
 {
   "siteTitle": "Icon Catalog",
   "studioName": "The Walkingbucket Studio",
-  "baseUrl": "https://example.com/icons/",
+  "baseUrl": "https://example.com/IconVault/",
   "apiListEndpoint": "list_icons.php",
   "apiUploadEndpoint": "upload.php",
   "allowedExtensions": ["png", "jpg", "jpeg"],
@@ -38,7 +38,7 @@ Example:
 
 ### `baseUrl` Parameter
 
-`baseUrl` must point to the public folder containing the icons.
+`baseUrl` must point to the public root of the catalog.
 
 If the site is hosted here:
 
@@ -46,20 +46,28 @@ If the site is hosted here:
 https://yourdomain.com/jsmmaker-icons/
 ```
 
-and the icons are located here:
-
-```text
-https://yourdomain.com/jsmmaker-icons/icons/
-```
-
 then you must configure:
 
 ```json
-"baseUrl": "https://yourdomain.com/jsmmaker-icons/icons/"
+"baseUrl": "https://yourdomain.com/jsmmaker-icons/"
 ```
 
-This is the URL copied when a user clicks an icon.
+The system will automatically append the correct subfolder depending on the media type:
 
+```text
+icons/apps/
+icons/banner/
+icons/wallpaper/
+icons/gallery/
+```
+
+Examples of automatically generated URLs:
+
+```text
+https://yourdomain.com/jsmmaker-icons/icons/apps/chrome.png
+https://yourdomain.com/jsmmaker-icons/icons/banner/onboarding.jpg
+https://yourdomain.com/jsmmaker-icons/icons/wallpaper/sonoma.jpg
+```
 ## Installation on a Web Hosting Environment
 
 1. Upload all files to the web server.
@@ -160,16 +168,17 @@ In JSMmaker2, use the icon catalog URL matching the `baseUrl` parameter.
 Example:
 
 ```text
-https://yourdomain.com/jsmmaker-icons/icons/
+https://yourdomain.com/jsmmaker-icons/
 ```
 
-Each click on an icon copies its full URL, for example:
+Each click on a media item automatically copies its full URL, for example:
 
 ```text
-https://yourdomain.com/jsmmaker-icons/icons/chrome.png
+https://yourdomain.com/jsmmaker-icons/icons/apps/chrome.png
 ```
 
-This URL can then be pasted into JSMmaker2 icon fields or into a Jamf Setup Manager plist file.
+This URL can then be pasted into JSMmaker2 icon, banner or wallpaper fields, or into a Jamf Setup Manager plist file.
+
 
 ## Bilingual FR / EN Interface
 <img width="918" height="73" alt="Capture d’écran 2026-05-19 à 23 30 00" src="https://github.com/user-attachments/assets/5bc54a3e-11c8-44a7-8836-27e6e08ecbdd" />
