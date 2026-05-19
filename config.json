@@ -1,19 +1,57 @@
 {
   "siteTitle": {
-    "fr": "Catalogue d’icônes",
-    "en": "Icon Catalog"
+    "fr": "IconVault",
+    "en": "IconVault"
   },
-  "studioName": "Your Studio Name",
-  "baseUrl": "https://example.com/path-to-catalog/icons/",
+  "studioName": "The Walkingbucket Studio",
+  "baseUrl": "https://mydomain.com/JSM-IconCatalogue/icons/",
+  "mediaFolders": {
+    "icons": {
+      "label": {
+        "fr": "Icônes",
+        "en": "Icons"
+      },
+      "path": "icons/",
+      "displayMode": "icon",
+      "description": {
+        "fr": "Icônes d’applications et pictogrammes.",
+        "en": "Application icons and pictograms."
+      }
+    },
+    "backgrounds": {
+      "label": {
+        "fr": "Fonds d’écran",
+        "en": "Backgrounds"
+      },
+      "path": "icons/backgrounds/",
+      "displayMode": "wide",
+      "description": {
+        "fr": "Fonds d’écran, visuels larges et images d’arrière-plan.",
+        "en": "Wallpapers, wide visuals and background images."
+      }
+    },
+    "banners": {
+      "label": {
+        "fr": "Bannières",
+        "en": "Banners"
+      },
+      "path": "icons/banners/",
+      "displayMode": "banner",
+      "description": {
+        "fr": "Bannières et visuels horizontaux.",
+        "en": "Banners and horizontal visuals."
+      }
+    }
+  },
+  "defaultMediaFolder": "icons",
   "apiListEndpoint": "list_icons.php",
   "apiUploadEndpoint": "upload.php",
   "allowedExtensions": [
     "png",
     "jpg",
-    "jpeg",
-    "webp"
+    "jpeg"
   ],
-  "maxUploadSizeMB": 5,
+  "maxUploadSizeMB": 10,
   "allowUpload": true,
   "defaultLanguage": "fr",
   "availableLanguages": [

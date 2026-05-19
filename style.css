@@ -325,6 +325,21 @@ progress {
   background: #eef2ff;
 }
 
+.folder-item.active {
+  color: var(--primary-dark);
+  background: #dbeafe;
+  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, .20);
+}
+
+.folder-separator {
+  margin: 12px 4px 2px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+}
+
 .pill {
   display: inline-flex;
   align-items: center;
@@ -340,6 +355,12 @@ progress {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(156px, 1fr));
   gap: 16px;
+}
+
+.icon-list:has(.media-banner),
+.icon-list:has(.media-wide),
+.icon-list:has(.media-gallery) {
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
 }
 
 .icon-card {
@@ -361,6 +382,7 @@ progress {
   border: 0;
   display: grid;
   place-items: center;
+  overflow: hidden;
   background:
     linear-gradient(45deg, #f1f5f9 25%, transparent 25%),
     linear-gradient(-45deg, #f1f5f9 25%, transparent 25%),
@@ -371,21 +393,59 @@ progress {
 }
 
 .icon-preview img {
+  width: 100%;
+  height: 100%;
   max-width: 72px;
   max-height: 72px;
   object-fit: contain;
 }
 
-.icon-meta {
-  padding: 14px;
+.media-icon .icon-preview {
+  aspect-ratio: 1 / 1;
+  height: auto;
 }
 
-.icon-name {
-  display: block;
-  min-height: 38px;
-  margin-bottom: 10px;
-  overflow-wrap: anywhere;
-  font-size: 14px;
+.media-icon .icon-preview img {
+  width: 72px;
+  height: 72px;
+  max-width: 72px;
+  max-height: 72px;
+  object-fit: contain;
+}
+
+.media-banner .icon-preview {
+  aspect-ratio: 16 / 9;
+  height: auto;
+}
+
+.media-banner .icon-preview img {
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+}
+
+.media-wide .icon-preview,
+.media-wide-detected .icon-preview {
+  aspect-ratio: 16 / 10;
+  height: auto;
+}
+
+.media-wide .icon-preview img,
+.media-wide-detected .icon-preview img {
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+}
+
+.media-gallery .icon-preview {
+  aspect-ratio: 4 / 3;
+  height: auto;
+}
+
+.media-gallery .icon-preview img {
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
 }
 
 .copy-button {
@@ -438,5 +498,12 @@ footer p {
 
   .hero-content h2 {
     font-size: 52px;
+  }
+
+  .icon-list,
+  .icon-list:has(.media-banner),
+  .icon-list:has(.media-wide),
+  .icon-list:has(.media-gallery) {
+    grid-template-columns: 1fr;
   }
 }

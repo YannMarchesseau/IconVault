@@ -15,17 +15,57 @@ document.addEventListener('DOMContentLoaded', async () => {
   const languageButtons = document.querySelectorAll('.lang-button');
 
   let currentDirectory = '';
+  let currentMediaFolder = '';
   let currentLanguage = localStorage.getItem('iconCatalogLanguage') || 'fr';
 
   let config = {
     siteTitle: {
-      fr: 'Catalogue d’icônes',
-      en: 'Icon Catalog'
+      fr: 'Catalogue de médias',
+      en: 'Media Catalog'
     },
     studioName: 'The Walkingbucket Studio',
     defaultLanguage: 'fr',
     availableLanguages: ['fr', 'en'],
-    baseUrl: `${window.location.origin}${window.location.pathname.replace(/[^/]*$/, '')}icons/`,
+    baseUrl: `${window.location.origin}${window.location.pathname.replace(/[^/]*$/, '')}`,
+    mediaFolders: {
+      icons: {
+        label: {
+          fr: 'Icônes',
+          en: 'Icons'
+        },
+        path: 'icons/',
+        displayMode: 'icon',
+        description: {
+          fr: 'Icônes d’applications et pictogrammes.',
+          en: 'Application icons and pictograms.'
+        }
+      },
+      backgrounds: {
+        label: {
+          fr: 'Fonds d’écran',
+          en: 'Backgrounds'
+        },
+        path: 'backgrounds/',
+        displayMode: 'wide',
+        description: {
+          fr: 'Fonds d’écran, visuels larges et images d’arrière-plan.',
+          en: 'Wallpapers, wide visuals and background images.'
+        }
+      },
+      banners: {
+        label: {
+          fr: 'Bannières',
+          en: 'Banners'
+        },
+        path: 'banners/',
+        displayMode: 'banner',
+        description: {
+          fr: 'Bannières et visuels horizontaux.',
+          en: 'Banners and horizontal visuals.'
+        }
+      }
+    },
+    defaultMediaFolder: 'icons',
     apiListEndpoint: 'list_icons.php',
     apiUploadEndpoint: 'upload.php',
     allowedExtensions: ['png', 'jpg', 'jpeg', 'webp'],
@@ -36,22 +76,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     fr: {
       refreshButton: 'Rafraîchir',
       copyCatalogButton: 'Copier l’URL du catalogue',
-      heroTitle: 'Un catalogue d’icônes simple, rapide et personnalisable.',
-      heroDescription: 'Glissez vos icônes, recherchez-les instantanément, puis copiez leur URL pour les utiliser dans vos workflows d’onboarding, vos fichiers plist ou vos outils internes.',
-      searchLabel: 'Rechercher une icône',
+      heroTitle: 'Un catalogue de médias simple, rapide et personnalisable.',
+      heroDescription: 'Séparez vos icônes, bannières et fonds d’écran, recherchez-les instantanément, puis copiez leur URL pour les utiliser dans vos workflows d’onboarding, vos fichiers plist ou vos outils internes.',
+      searchLabel: 'Rechercher un média',
       searchPlaceholder: 'Ex. chrome, zoom, office, printer...',
-      dropTitle: 'Glissez-déposez vos icônes ici',
+      dropTitle: 'Glissez-déposez vos médias ici',
       uploadHelp: 'Formats acceptés : {formats}',
-      foldersTitle: 'Dossiers',
+      foldersTitle: 'Catégories',
       backButton: 'Retour',
-      availableIconsEyebrow: 'Icônes disponibles',
+      availableIconsEyebrow: 'Médias disponibles',
       rootCatalog: 'Racine du catalogue',
-      folderPath: 'Dossier : {folder}',
-      iconCountSingular: '1 icône',
-      iconCountPlural: '{count} icônes',
-      noFolder: 'Aucun dossier.',
-      emptyTitle: 'Aucune icône trouvée',
-      emptyDescription: 'Ajoutez des fichiers dans le dossier icons/ ou utilisez le glisser-déposer.',
+      folderPath: '{folder}',
+      iconCountSingular: '1 média',
+      iconCountPlural: '{count} médias',
+      noFolder: 'Aucune catégorie.',
+      emptyTitle: 'Aucun média trouvé',
+      emptyDescription: 'Ajoutez des fichiers dans le dossier sélectionné ou utilisez le glisser-déposer.',
       copyUrlButton: 'Copier l’URL',
       copiedUrl: 'URL copiée : {url}',
       copiedCatalogUrl: 'URL du catalogue copiée : {url}',
@@ -65,22 +105,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     en: {
       refreshButton: 'Refresh',
       copyCatalogButton: 'Copy catalog URL',
-      heroTitle: 'A simple, fast and customizable icon catalog.',
-      heroDescription: 'Drag your icons, search them instantly, then copy their URL for onboarding workflows, plist files or internal tools.',
-      searchLabel: 'Search an icon',
+      heroTitle: 'A simple, fast and customizable media catalog.',
+      heroDescription: 'Separate icons, banners and backgrounds, search them instantly, then copy their URL for onboarding workflows, plist files or internal tools.',
+      searchLabel: 'Search media',
       searchPlaceholder: 'E.g. chrome, zoom, office, printer...',
-      dropTitle: 'Drag and drop your icons here',
+      dropTitle: 'Drag and drop your media here',
       uploadHelp: 'Accepted formats: {formats}',
-      foldersTitle: 'Folders',
+      foldersTitle: 'Categories',
       backButton: 'Back',
-      availableIconsEyebrow: 'Available icons',
+      availableIconsEyebrow: 'Available media',
       rootCatalog: 'Catalog root',
-      folderPath: 'Folder: {folder}',
-      iconCountSingular: '1 icon',
-      iconCountPlural: '{count} icons',
-      noFolder: 'No folder.',
-      emptyTitle: 'No icon found',
-      emptyDescription: 'Add files to the icons/ folder or use drag and drop.',
+      folderPath: '{folder}',
+      iconCountSingular: '1 media item',
+      iconCountPlural: '{count} media items',
+      noFolder: 'No category.',
+      emptyTitle: 'No media found',
+      emptyDescription: 'Add files to the selected folder or use drag and drop.',
       copyUrlButton: 'Copy URL',
       copiedUrl: 'URL copied: {url}',
       copiedCatalogUrl: 'Catalog URL copied: {url}',
@@ -110,6 +150,36 @@ document.addEventListener('DOMContentLoaded', async () => {
       return value[currentLanguage] || value.fr || value.en || fallback;
     }
     return fallback;
+  }
+
+  function getMediaFolders() {
+    return config.mediaFolders || {};
+  }
+
+  function getCurrentMediaFolderConfig() {
+    const mediaFolders = getMediaFolders();
+    return mediaFolders[currentMediaFolder] || mediaFolders[config.defaultMediaFolder] || Object.values(mediaFolders)[0] || {
+      label: {
+        fr: 'Icônes',
+        en: 'Icons'
+      },
+      path: 'icons/',
+      displayMode: 'icon'
+    };
+  }
+
+  function getCurrentMediaFolderLabel() {
+    return localizedConfigValue(getCurrentMediaFolderConfig().label, currentMediaFolder || 'icons');
+  }
+
+  function getCurrentMediaPath() {
+    const folderConfig = getCurrentMediaFolderConfig();
+    return folderConfig.path || `${currentMediaFolder}/`;
+  }
+
+  function normalizePath(path) {
+    if (!path) return '';
+    return path.endsWith('/') ? path : `${path}/`;
   }
 
 
@@ -156,6 +226,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       currentLanguage = config.defaultLanguage || 'fr';
     }
 
+    const mediaFolders = getMediaFolders();
+    if (!currentMediaFolder || !mediaFolders[currentMediaFolder]) {
+      currentMediaFolder = config.defaultMediaFolder || Object.keys(mediaFolders)[0] || 'icons';
+    }
+
     if (!config.allowUpload) {
       uploadArea.style.display = 'none';
     }
@@ -196,7 +271,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function iconUrl(fileName) {
     const baseUrl = normalizeBaseUrl(config.baseUrl);
-    return `${baseUrl}${currentDirectory ? `${currentDirectory}/` : ''}${fileName}`;
+    const mediaPath = normalizePath(getCurrentMediaPath());
+    return `${baseUrl}${mediaPath}${currentDirectory ? `${currentDirectory}/` : ''}${fileName}`;
   }
 
   async function copyToClipboard(text, isCatalogUrl = false) {
@@ -225,7 +301,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function updatePathLabel() {
-    currentPathLabel.textContent = currentDirectory ? t('folderPath', { folder: currentDirectory }) : t('rootCatalog');
+    const folderLabel = getCurrentMediaFolderLabel();
+    currentPathLabel.textContent = currentDirectory ? `${folderLabel} / ${currentDirectory}` : folderLabel;
     backButton.disabled = !currentDirectory;
   }
 
@@ -236,18 +313,37 @@ document.addEventListener('DOMContentLoaded', async () => {
   function renderFolders(directories) {
     folderList.innerHTML = '';
 
-    if (!directories.length) {
-      const empty = document.createElement('p');
-      empty.className = 'status-message';
-      empty.textContent = t('noFolder');
-      folderList.appendChild(empty);
-      return;
+    const mediaFolders = getMediaFolders();
+    Object.entries(mediaFolders).forEach(([key, folderConfig]) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'folder-item';
+      if (key === currentMediaFolder && !currentDirectory) {
+        button.classList.add('active');
+      }
+      button.innerHTML = `<span>${folderConfig.displayMode === 'icon' ? '◼︎' : '▭'}</span><span>${localizedConfigValue(folderConfig.label, key)}</span>`;
+      button.addEventListener('click', () => {
+        currentMediaFolder = key;
+        currentDirectory = '';
+        loadIcons();
+      });
+      folderList.appendChild(button);
+    });
+
+    if (directories.length) {
+      const separator = document.createElement('div');
+      separator.className = 'folder-separator';
+      separator.textContent = currentLanguage === 'fr' ? 'Sous-dossiers' : 'Subfolders';
+      folderList.appendChild(separator);
     }
 
     directories.forEach(directory => {
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'folder-item';
+      if (directory === currentDirectory) {
+        button.classList.add('active');
+      }
       button.innerHTML = `<span>📁</span><span>${directory}</span>`;
       button.addEventListener('click', () => {
         currentDirectory = directory;
@@ -267,6 +363,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     filteredFiles.forEach(file => {
       const node = iconTemplate.content.cloneNode(true);
       const card = node.querySelector('.icon-card');
+      const displayMode = getCurrentMediaFolderConfig().displayMode || 'icon';
+      card.classList.add(`media-${displayMode}`);
       const preview = node.querySelector('.icon-preview');
       const image = node.querySelector('img');
       const name = node.querySelector('.icon-name');
@@ -274,6 +372,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       const url = iconUrl(file);
 
       image.src = url;
+      image.onload = () => {
+        if (image.naturalWidth > image.naturalHeight * 1.5) {
+          card.classList.add('media-wide-detected');
+        }
+      };
       image.alt = file;
       name.textContent = file;
       copyButton.textContent = t('copyUrlButton');
@@ -289,7 +392,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const filter = searchInput.value.trim();
 
     try {
-      const endpoint = `${config.apiListEndpoint}?directory=${encodeURIComponent(currentDirectory)}`;
+      const endpoint = `${config.apiListEndpoint}?mediaFolder=${encodeURIComponent(currentMediaFolder)}&directory=${encodeURIComponent(currentDirectory)}`;
       const response = await fetch(endpoint, { cache: 'no-store' });
       if (!response.ok) throw new Error('Impossible de charger le catalogue');
 
@@ -321,6 +424,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const formData = new FormData();
     validFiles.forEach(file => formData.append('file[]', file));
+    formData.append('mediaFolder', currentMediaFolder);
+    formData.append('directory', currentDirectory);
 
     progressBar.style.display = 'block';
     progressBar.removeAttribute('value');
@@ -366,7 +471,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   refreshButton.addEventListener('click', loadIcons);
-  copyBaseButton.addEventListener('click', () => copyToClipboard(normalizeBaseUrl(config.baseUrl), true));
+  copyBaseButton.addEventListener('click', () => {
+    const baseUrl = normalizeBaseUrl(config.baseUrl);
+    const mediaPath = normalizePath(getCurrentMediaPath());
+    copyToClipboard(`${baseUrl}${mediaPath}${currentDirectory ? `${currentDirectory}/` : ''}`, true);
+  });
 
   languageButtons.forEach(button => {
     button.addEventListener('click', () => {

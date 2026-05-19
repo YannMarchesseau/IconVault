@@ -1,8 +1,7 @@
 <?php
 require_once __DIR__ . '/auth.php';
 requireAuthentication();
-?>
-<?php
+
 header('Content-Type: application/json; charset=utf-8');
 
 $configPath = __DIR__ . '/config.json';
@@ -18,17 +17,58 @@ $allowedExtensions = $config['allowedExtensions'] ?? ['png', 'jpg', 'jpeg', 'web
 $maxUploadSizeMB = $config['maxUploadSizeMB'] ?? 5;
 $maxUploadSizeBytes = $maxUploadSizeMB * 1024 * 1024;
 
+$mediaFolders = $config['mediaFolders'] ?? [
+    'icons' => [
+        'path' => 'icons/'
+    ]
+];
+$defaultMediaFolder = $config['defaultMediaFolder'] ?? array_key_first($mediaFolders);
+
+$requestedMediaFolder = $_POST['mediaFolder'] ?? $defaultMediaFolder;
+$requestedMediaFolder = preg_replace('/[^a-zA-Z0-9._-]/', '', $requestedMediaFolder);
+
+if (!isset($mediaFolders[$requestedMediaFolder])) {
+    $requestedMediaFolder = $defaultMediaFolder;
+}
+
+$mediaPath = $mediaFolders[$requestedMediaFolder]['path'] ?? 'icons/';
+$mediaPath = trim($mediaPath, "/\\");
+$mediaPath = preg_replace('/[^a-zA-Z0-9._\/-]/', '', $mediaPath);
+
+$requestedDirectory = $_POST['directory'] ?? '';
+$requestedDirectory = trim($requestedDirectory, "/\\");
+$requestedDirectory = preg_replace('/[^a-zA-Z0-9._-]/', '', $requestedDirectory);
+
+$rootDirectoryPath = __DIR__ . DIRECTORY_SEPARATOR . $mediaPath;
+
+if (!is_dir($rootDirectoryPath)) {
+    mkdir($rootDirectoryPath, 0755, true);
+}
+
+$rootDirectory = realpath($rootDirectoryPath);
+
+if ($rootDirectory === false) {
+    http_response_code(500);
+    echo json_encode([['status' => 'error', 'message' => 'Impossible d’accéder au dossier média.']]);
+    exit;
+}
+
+$targetDir = $rootDirectory;
+
+if ($requestedDirectory !== '') {
+    $candidate = realpath($rootDirectory . DIRECTORY_SEPARATOR . $requestedDirectory);
+
+    if ($candidate !== false && str_starts_with($candidate, $rootDirectory) && is_dir($candidate)) {
+        $targetDir = $candidate;
+    }
+}
+
 $allowedMimeTypes = [
     'png' => ['image/png'],
     'jpg' => ['image/jpeg'],
     'jpeg' => ['image/jpeg'],
     'webp' => ['image/webp']
 ];
-
-$targetDir = __DIR__ . '/icons';
-if (!is_dir($targetDir)) {
-    mkdir($targetDir, 0755, true);
-}
 
 $response = [];
 
@@ -54,6 +94,7 @@ foreach ($_FILES['file']['name'] as $key => $originalName) {
     }
 
     $mimeType = mime_content_type($tmpName);
+
     if (!isset($allowedMimeTypes[$extension]) || !in_array($mimeType, $allowedMimeTypes[$extension], true)) {
         $response[] = ['name' => $safeName, 'status' => 'error', 'message' => 'Type MIME invalide.'];
         continue;
@@ -69,7 +110,13 @@ foreach ($_FILES['file']['name'] as $key => $originalName) {
     }
 
     if (move_uploaded_file($tmpName, $targetFile)) {
-        $response[] = ['name' => basename($targetFile), 'status' => 'success', 'message' => 'Fichier téléversé.'];
+        $response[] = [
+            'name' => basename($targetFile),
+            'mediaFolder' => $requestedMediaFolder,
+            'directory' => $requestedDirectory,
+            'status' => 'success',
+            'message' => 'Fichier téléversé.'
+        ];
     } else {
         $response[] = ['name' => $safeName, 'status' => 'error', 'message' => 'Erreur lors du téléversement.'];
     }
