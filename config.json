@@ -1,0 +1,23 @@
+{
+  "siteTitle": {
+    "fr": "Catalogue d’icônes",
+    "en": "Icon Catalog"
+  },
+  "studioName": "Your Studio Name",
+  "baseUrl": "https://example.com/path-to-catalog/icons/",
+  "apiListEndpoint": "list_icons.php",
+  "apiUploadEndpoint": "upload.php",
+  "allowedExtensions": [
+    "png",
+    "jpg",
+    "jpeg",
+    "webp"
+  ],
+  "maxUploadSizeMB": 5,
+  "allowUpload": true,
+  "defaultLanguage": "fr",
+  "availableLanguages": [
+    "fr",
+    "en"
+  ]
+}

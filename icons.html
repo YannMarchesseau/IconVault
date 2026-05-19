@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catalogue d’icônes</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <nav class="topbar">
+        <div class="brand">
+          <div class="brand-mark">IC</div>
+          <div>
+            <p id="studio-name" class="studio-name">The Walkingbucket Studio</p>
+            <h1 id="site-title">Catalogue d’icônes</h1>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <div class="language-switcher" aria-label="Language selector">
+            <button id="lang-fr-button" class="lang-button active" type="button" data-language="fr">FR</button>
+            <button id="lang-en-button" class="lang-button" type="button" data-language="en">EN</button>
+          </div>
+          <button id="refresh-button" class="secondary-button" type="button" data-i18n="refreshButton">Rafraîchir</button>
+          <button id="copy-base-button" class="primary-button" type="button" data-i18n="copyCatalogButton">Copier l’URL du catalogue</button>
+        </div>
+      </nav>
+
+      <section class="hero-content">
+        <p class="eyebrow">Jamf Setup Manager ready</p>
+        <h2 data-i18n="heroTitle">Un catalogue d’icônes simple, rapide et personnalisable.</h2>
+        <p data-i18n="heroDescription">
+          Glissez vos icônes, recherchez-les instantanément, puis copiez leur URL pour les utiliser
+          dans vos workflows d’onboarding, vos fichiers plist ou vos outils internes.
+        </p>
+      </section>
+    </header>
+
+    <main>
+      <section class="control-card">
+        <div class="search-wrapper">
+          <label for="search-input" data-i18n="searchLabel">Rechercher une icône</label>
+          <input type="search" id="search-input" data-i18n-placeholder="searchPlaceholder" placeholder="Ex. chrome, zoom, office, printer..." />
+        </div>
+
+        <div id="upload-area" class="upload-area">
+          <div class="upload-icon">⬆</div>
+          <div>
+            <strong data-i18n="dropTitle">Glissez-déposez vos icônes ici</strong>
+            <p id="upload-help">Formats acceptés : PNG, JPG, JPEG, WEBP</p>
+          </div>
+        </div>
+
+        <progress id="progress-bar" value="0" max="100"></progress>
+        <div id="status-message" class="status-message" aria-live="polite"></div>
+      </section>
+
+      <section class="content-grid">
+        <aside class="sidebar">
+          <div class="sidebar-header">
+            <h3 data-i18n="foldersTitle">Dossiers</h3>
+            <button id="back-button" type="button" class="ghost-button" disabled data-i18n="backButton">Retour</button>
+          </div>
+          <div id="folder-list" class="folder-list"></div>
+        </aside>
+
+        <section class="preview-area">
+          <div class="preview-header">
+            <div>
+              <p class="eyebrow" data-i18n="availableIconsEyebrow">Icônes disponibles</p>
+              <h3 id="current-path-label">Racine du catalogue</h3>
+            </div>
+            <span id="icon-count" class="pill">0 icône</span>
+          </div>
+
+          <div id="icon-list" class="icon-list"></div>
+          <div id="empty-state" class="empty-state">
+            <h4 data-i18n="emptyTitle">Aucune icône trouvée</h4>
+            <p data-i18n="emptyDescription">Ajoutez des fichiers dans le dossier icons/ ou utilisez le glisser-déposer.</p>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <footer>
+      <p>© <span id="footer-studio-name">The Walkingbucket Studio</span> — <span id="footer-site-title">Catalogue d’icônes</span></p>
+      <p data-i18n="footerBaseline">Réutilisable, configurable et prêt pour l’auto-hébergement.</p>
+    </footer>
+  </div>
+
+  <template id="icon-template">
+    <article class="icon-card">
+      <button class="icon-preview" type="button">
+        <img alt="" loading="lazy" />
+      </button>
+      <div class="icon-meta">
+        <strong class="icon-name"></strong>
+        <button class="copy-button" type="button" data-i18n="copyUrlButton">Copier l’URL</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>
