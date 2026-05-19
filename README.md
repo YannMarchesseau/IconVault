@@ -1,4 +1,5 @@
 # IconVault - Mini Icon Catalog Website
+Demo site : https://walkingbucket.fr/JSM-IconCatalogue/icons.html
 
 This mini website allows you to host a reusable icon catalog for JSMmaker2, Jamf Setup Manager, or any other tool that expects image URLs.
 
@@ -183,7 +184,7 @@ This URL can then be pasted into JSMmaker2 icon, banner or wallpaper fields, or 
 ## Bilingual FR / EN Interface
 <img width="918" height="73" alt="Capture d’écran 2026-05-19 à 23 30 00" src="https://github.com/user-attachments/assets/5bc54a3e-11c8-44a7-8836-27e6e08ecbdd" />
 
-The interface now includes a `FR / EN` language selector in the top-right corner.
+The interface includes a `FR / EN` language selector in the top-right corner.
 
 Texts are managed in `script.js` inside the `translations` object.
 
