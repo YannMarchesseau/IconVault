@@ -1,5 +1,7 @@
 # IconVault - Mini site de gestion d’icônes
 
+Site de démo : https://walkingbucket.fr/JSM-IconCatalogue/icons.html
+
 Ce mini site permet d’héberger un catalogue d’icônes réutilisable dans JSMmaker2, Jamf Setup Manager ou tout autre outil qui attend des URLs d’images.
 Le site est volontairement générique et personnalisable.
 
