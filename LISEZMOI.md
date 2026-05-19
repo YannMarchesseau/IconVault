@@ -1,8 +1,9 @@
-# Mini site de gestion d’icônes
+# IconVault - Mini site de gestion d’icônes
 
 Ce mini site permet d’héberger un catalogue d’icônes réutilisable dans JSMmaker2, Jamf Setup Manager ou tout autre outil qui attend des URLs d’images.
+Le site est volontairement générique et personnalisable.
 
-Aucune référence à Appitel n’est incluse. Le site est volontairement générique et personnalisable.
+<img width="1518" height="1065" alt="IconVault" src="https://github.com/user-attachments/assets/cea1c07c-f9a1-4b7c-920f-b429c462868a" />
 
 ## Fichiers inclus
 
@@ -26,7 +27,7 @@ Exemple :
 {
   "siteTitle": "Icon Catalog",
   "studioName": "The Walkingbucket Studio",
-  "baseUrl": "https://example.com/icons/",
+  "baseUrl": "https://example.com/IconVault/",
   "apiListEndpoint": "list_icons.php",
   "apiUploadEndpoint": "upload.php",
   "allowedExtensions": ["png", "jpg", "jpeg"],
@@ -34,6 +35,7 @@ Exemple :
   "allowUpload": true
 }
 ```
+
 
 ### Paramètre `baseUrl`
 
@@ -45,19 +47,29 @@ Si le site est hébergé ici :
 https://mondomaine.fr/jsmmaker-icons/
 ```
 
-et que les icônes sont dans :
-
-```text
-https://mondomaine.fr/jsmmaker-icons/icons/
-```
-
 alors il faut configurer :
 
 ```json
-"baseUrl": "https://mondomaine.fr/jsmmaker-icons/icons/"
+"baseUrl": "https://mondomaine.fr/jsmmaker-icons/"
 ```
 
-C’est cette URL qui sera copiée lorsque l’utilisateur clique sur une icône.
+Le système ajoutera automatiquement le bon sous-dossier selon le type de média utilisé :
+
+```text
+icons/apps/
+icons/banner/
+icons/wallpaper/
+icons/gallery/
+```
+
+Exemples d’URLs générées automatiquement :
+
+```text
+https://mondomaine.fr/jsmmaker-icons/icons/apps/chrome.png
+https://mondomaine.fr/jsmmaker-icons/icons/banner/onboarding.jpg
+https://mondomaine.fr/jsmmaker-icons/icons/wallpaper/sonoma.jpg
+```
+
 
 ## Installation sur un hébergement web
 
@@ -100,7 +112,7 @@ La zone de glisser-déposer sera masquée, et `upload.php` refusera les envois.
 Par défaut :
 
 ```json
-"allowedExtensions": ["png", "jpg", "jpeg", "webp"]
+"allowedExtensions": ["png", "jpg", "jpeg"]
 ```
 
 Le SVG n’est pas activé volontairement pour éviter certains risques de sécurité liés aux fichiers SVG servis directement par un navigateur.
@@ -159,21 +171,24 @@ Dans JSMmaker2, utilisez l’URL du catalogue d’icônes correspondant au param
 Exemple :
 
 ```text
-https://mondomaine.fr/jsmmaker-icons/icons/
+https://mondomaine.fr/jsmmaker-icons/
 ```
 
-Chaque clic sur une icône copie son URL complète, par exemple :
+Chaque clic sur un média copie automatiquement son URL complète, par exemple :
 
 ```text
-https://mondomaine.fr/jsmmaker-icons/icons/chrome.png
+https://mondomaine.fr/jsmmaker-icons/icons/apps/chrome.png
 ```
 
-Cette URL peut ensuite être collée dans les champs d’icône de JSMmaker2 ou dans un fichier plist Jamf Setup Manager.
+Cette URL peut ensuite être collée dans les champs d’icône, de bannière ou de fond d’écran de JSMmaker2 ou dans un fichier plist Jamf Setup Manager.
+
 
 
 ## Interface bilingue FR / EN
 
-L’interface dispose maintenant d’un sélecteur `FR / EN` en haut à droite.
+<img width="918" height="73" alt="Capture d’écran 2026-05-19 à 23 30 00" src="https://github.com/user-attachments/assets/ce9a9e16-73cd-4ce9-b92b-754c7af06c59" />
+
+L’interface dispose d’un sélecteur `FR / EN` en haut à droite.
 
 Les textes sont gérés dans `script.js`, dans l’objet `translations`.
 
@@ -198,6 +213,8 @@ La langue choisie par l’utilisateur est mémorisée dans le navigateur via `lo
 
 ## Protection de l’upload par connexion
 
+<img width="1631" height="340" alt="Capture d’écran 2026-05-19 à 23 26 27" src="https://github.com/user-attachments/assets/be24dc04-2ca8-4233-8c87-153febe3fef5" />
+
 Le catalogue reste public, mais l’upload nécessite maintenant une authentification.
 
 ### Fichiers ajoutés
@@ -209,6 +226,8 @@ Le catalogue reste public, mais l’upload nécessite maintenant une authentific
 | `auth.php` | Vérification de session |
 | `auth_config.php` | Identifiants et mot de passe hashé |
 | `auth_status.php` | Vérifie si l’utilisateur est connecté |
+
+<img width="906" height="157" alt="Capture d’écran 2026-05-19 à 23 26 56" src="https://github.com/user-attachments/assets/13bb212f-a998-41b4-ad5d-31b8bee96a8f" />
 
 ### IMPORTANT
 
